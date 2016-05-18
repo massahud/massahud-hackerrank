@@ -84,15 +84,31 @@ public class Solution {
 		final HashMap<Integer, City> cities = new HashMap<>(numberOfCities);
 		IntStream.range(0, numberOfCities).sequential().forEach((i) -> cities.put(i, new City(i, letters.contains(i))));
 		for (int i = 0; i < numberOfCities-1; i++) {
-			City city1 = cities.get(scan.nextInt());
-			City city2 = cities.get(scan.nextInt());
+			int id1 = scan.nextInt();
+			int id2 = scan.nextInt();
+			System.out.println(id1 + " " + id2);
+			City city1 = cities.get(id1);
+			City city2 = cities.get(id2);
 			int length = scan.nextInt();
 			city1.roads.add(new Road(city2,length));
 			city2.roads.add(new Road(city1,length));
 		}
 		
+		printCities(cities);
+		
 		City leaf = findLeaf(cities);
 		prune(leaf, null, cities);
+		printCities(cities);
+	}
+			
+	private static void printCities(HashMap<Integer, City> cities) {
+		for(City city : cities.values()) {
+			System.out.println(city.id);
+			for (Road r : city.roads) {
+				System.out.println(" -- " + r.city.id + "->" + r.length);
+			}
+			System.out.println("-----------------");
+		}
 	}
 	
 	private static City findLeaf(HashMap<Integer, City> cities) {
@@ -120,7 +136,7 @@ public class Solution {
 				Road newRoad = prune(road.city, me, cities);
 				if (newRoad.length == 0) {
 					me.roads.remove(road);		
-					cities.remove(road.city.id);
+					
 				} else {
 					me.mustPass = true;
 					me.roads.remove(road);
@@ -131,6 +147,7 @@ public class Solution {
 		if (me.roads.size() == 1) { 
 			// leaf
 			if (!me.mustPass) {
+				cities.remove(me.id);
 				return new Road(me, 0);
 			} else {
 				return me.roads.iterator().next();
@@ -143,6 +160,8 @@ public class Solution {
 			if (nextRoad.equals(previousRoad)) {				
 				nextRoad = it.next();
 			}
+			System.out.println(me.id);		
+			System.out.println("remove " + nextRoad.city.id);
 			cities.remove(nextRoad.city.id);
 			me.roads.remove(nextRoad);
 			return new Road(me, previousRoad.length + nextRoad.length);
