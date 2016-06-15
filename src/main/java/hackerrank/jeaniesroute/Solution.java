@@ -1,16 +1,8 @@
 package hackerrank.jeaniesroute;
 
-
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.stream.IntStream;
+import java.io.*;
+import java.util.*;
+import java.util.stream.*;
 
 public class Solution {
 
@@ -114,24 +106,8 @@ public class Solution {
         }
 
         private long findBiggestBranchRecursive(City city, City parent, long[] biggest) {
-            if (parent == null && city.getNeighbors().size() <= 2) {
-                long distance = 0;
-                for (City neighbor : city.getNeighbors()) {
-                    distance += findBiggestBranchRecursive(neighbor, city, biggest);
-                }
-                updateBiggestBranch(distance, biggest);
-                return biggest[0];
-            } else if (parent != null && city.getNeighbors().size() == 1) {
+            if (parent != null && city.getNeighbors().size() == 1) {
                 return city.getDistanceTo(parent);
-            } else if (city.getNeighbors().size() == 2) {
-                for (City neighbor : city.getNeighbors()) {
-                    if (!neighbor.equals(parent)) {
-                        long branchDistance = findBiggestBranchRecursive(neighbor, city, biggest);
-                        updateBiggestBranch(branchDistance + city.getDistanceTo(parent), biggest);
-                        return branchDistance + city.getDistanceTo(parent);
-                        
-                    }
-                }
             } else {
                 boolean updated = false;
                 long biggest1 = 0;
@@ -148,13 +124,12 @@ public class Solution {
                         updateBiggestBranch(city.getDistanceTo(parent)+biggest1, biggest);
                         updateBiggestBranch(biggest1+biggest2, biggest);
                     }
-                }                                
-                
-                
-                return biggest1 + city.getDistanceTo(parent);
-                
+                }                                            
+                if (parent == null) {
+                    return biggest[0];
+                }
+                return biggest1 + city.getDistanceTo(parent);                
             }
-            return 0;
         }
 
         private boolean updateBiggestBranch(long distance, long[] biggest) {
