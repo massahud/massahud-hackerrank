@@ -1,5 +1,5 @@
 
-package massahud.hackerrank.projecteuler.massahud.hackerrank.projecteuler.euler096;
+package massahud.hackerrank.projecteuler.euler096;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,7 +42,7 @@ public class Area implements Observer {
 			Area area = (Area)arg;
 			Set<Cell> intersection = new HashSet<>(blank);
 			intersection.retainAll(area.cells);
-			if (intersection.size() < blank.size()) {
+			if (!intersection.isEmpty() && intersection.size() < blank.size()) {
 				Cell c = intersection.iterator().next();
 				if (c.getMustBe().size() == intersection.size()) {
 					for (Cell b : new ArrayList<>(blank)) {

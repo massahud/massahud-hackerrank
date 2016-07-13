@@ -1,9 +1,9 @@
-package massahud.hackerrank.projecteuler.massahud.hackerrank.projecteuler.euler096;
+package massahud.hackerrank.projecteuler.euler096;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Scanner;
 import java.util.Set;
 
 public class SuDoku {
@@ -51,21 +51,13 @@ public class SuDoku {
 		for (int i = 0; i < 9; i++) {
 			String line = state[i];
 			for (int j = 0; j < 9; j++) {
-				if (i == 8 && (j==3 || j==5)) {
-					cells[i][j].addObserver(new Observer() {
-
-						@Override
-						public void update(Observable o, Object arg) {
-							System.out.println(o);
-							System.out.println(arg);
-						}
-						
-					});
+				if (cells[i][j].getValue() == 0) {
+					cells[i][j].setValue(line.charAt(j) - '0');
+				} else {
+					assert cells[i][j].getValue() == (line.charAt(j) - '0');
 				}
-				cells[i][j].setValue(line.charAt(j) - '0');
 			}
-		}
-		System.out.println(toString(cells));
+		}	
 		boolean notSolved = true;
 		while(notSolved) {
 			for (Area area : areas) {
@@ -97,24 +89,29 @@ public class SuDoku {
 	
 	public static void main(String[] args) {
 		SuDoku sudoku = new SuDoku();
-		String[] board = new String[] {
-				"003020600",
-				"900305001",
-				"001806400",
-				"008102900",
-				"700000008",
-				"006708200",
-				"002609500",
-				"800203009",
-				"005010300"
-		};
-		System.out.println("BOARD");
-		for (String line : board) {
-			System.out.println(line);
-		}
-		System.out.println("SOLUTION");
-		for (String line : sudoku.solve(board)) {
-			System.out.println(line);
+//		Scanner scan = new Scanner(SuDoku.class.getResourceAsStream("p096_sudoku.txt"));
+		Scanner scan = new Scanner(SuDoku.class.getResourceAsStream("grid02.txt"));
+		String[] board = new String[9];
+		while (scan.hasNext()) {
+			System.out.println(scan.nextLine());
+			for (int i = 0; i < 9; i++) {
+				board[i] = scan.nextLine();
+			}
+			String[] solved = sudoku.solve(board);
+			for (String str : solved) {
+				if (str.indexOf("0") >= 0) {
+					System.out.println("FAIL");
+					break;
+				}
+			}
+//			for (String line : board) {
+//				System.out.println(line);
+//			}
+//			
+			for (String line : solved) {
+				System.out.println(line);
+			}
+			
 		}
 	}
 	
