@@ -35,6 +35,7 @@ public class Cell extends Observable {
 	public void removePossible(Integer ... values) {
 		for (int val : values) {
 			if (possible.remove(val)) {
+				mustBe.remove(val);
 				setChanged();
 				if (possible.size() == 1) {
 					this.value = possible.iterator().next();

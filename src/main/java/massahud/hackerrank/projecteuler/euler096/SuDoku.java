@@ -51,16 +51,19 @@ public class SuDoku {
 		for (int i = 0; i < 9; i++) {
 			String line = state[i];
 			for (int j = 0; j < 9; j++) {
-				if (cells[i][j].getValue() == 0) {
+				if (cells[i][j].getValue() == 0 && (line.charAt(j) - '0') != 0) {
 					cells[i][j].setValue(line.charAt(j) - '0');
 				} else {
-					assert cells[i][j].getValue() == (line.charAt(j) - '0');
+					if (line.charAt(j) - '0' != 0 && cells[i][j].getValue() != (line.charAt(j) - '0')) {
+						throw new IllegalStateException(
+								String.format("%d %d %d %d", i, j, cells[i][j].getValue(), line.charAt(j) - '0'));
+					}
 				}
 			}
 		}
 		boolean notSolved = false;
 		do {
-//			System.out.println(toString(cells));
+			// System.out.println(toString(cells));
 			for (Area area : areas) {
 				area.setMustBeValues();
 			}
@@ -78,13 +81,17 @@ public class SuDoku {
 							}
 						}
 						Cell blankCell = smallest.getBlank().iterator().next();
-						blankCell.setValue(blankCell.getMustBe().iterator().next());						
+						blankCell.setValue(blankCell.getPossible().iterator().next());
 						break;
 					}
 				}
 			}
 		} while (notSolved);
-
+		 for (Area area : areas) {
+		 if (!area.validate()) {
+		 throw new RuntimeException("Área não válida: " + area);
+		 }
+		 }
 		String[] solution = new String[9];
 		for (int i = 0; i < 9; i++) {
 			StringBuilder line = new StringBuilder();
@@ -100,8 +107,10 @@ public class SuDoku {
 	public static void main(String[] args) {
 		SuDoku sudoku = new SuDoku();
 		Scanner scan = new Scanner(SuDoku.class.getResourceAsStream("p096_sudoku.txt"));
-//		Scanner scan = new Scanner(SuDoku.class.getResourceAsStream("grid02.txt"));
+		// Scanner scan = new
+		// Scanner(SuDoku.class.getResourceAsStream("grid02.txt"));
 		String[] board = new String[9];
+		long sum = 0;
 		while (scan.hasNext()) {
 			System.out.println(scan.nextLine());
 			for (int i = 0; i < 9; i++) {
@@ -114,15 +123,18 @@ public class SuDoku {
 					break;
 				}
 			}
-			// for (String line : board) {
-			// System.out.println(line);
-			// }
-			//
-			for (String line : solved) {
-				System.out.println(line);
+			for (int i = 0; i < 9; i++) {
+				System.out.println(board[i]);
+				System.out.println(solved[i]);
+				System.out.println();
 			}
 
+			sum += Integer.parseInt(solved[0].substring(0, 3));
+			// for (String line : solved) {
+			// System.out.println(line);
+			// 
 		}
+		System.out.println(sum);
 	}
 
 	public String toString(Cell[][] cells) {

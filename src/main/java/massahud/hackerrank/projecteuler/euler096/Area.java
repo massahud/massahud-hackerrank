@@ -2,6 +2,7 @@
 package massahud.hackerrank.projecteuler.euler096;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -83,6 +84,23 @@ public class Area implements Observer {
 
 	public Set<Cell> getBlank() {
 		return Collections.unmodifiableSet(blank);
+	}
+
+	public boolean validate() {
+		Set<Integer> values = new HashSet<>(Arrays.asList(1,2,3,4,5,6,7,8,9));
+		
+		for (Cell cell : cells) {
+			values.remove(cell.getValue());
+		}
+		if (values.size() > 0) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Area [cells=" + Arrays.toString(cells.toArray()) + ", blank=" + Arrays.toString(blank.toArray()) + ", filled=" + Arrays.toString(filled.toArray()) + "]";
 	}
 	
 }
