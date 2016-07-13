@@ -3,6 +3,7 @@ package massahud.hackerrank.projecteuler.euler096;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
@@ -78,6 +79,10 @@ public class Area implements Observer {
 		for (Cell c : blanks) {
 			c.notifyObservers(this);
 		}
+	}
+
+	public Set<Cell> getBlank() {
+		return Collections.unmodifiableSet(blank);
 	}
 	
 }
