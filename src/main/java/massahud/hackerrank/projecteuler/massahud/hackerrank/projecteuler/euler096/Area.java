@@ -1,7 +1,10 @@
 
 package massahud.hackerrank.projecteuler.massahud.hackerrank.projecteuler.euler096;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
@@ -21,17 +24,33 @@ public class Area implements Observer {
 		}
 		cells.add(cell);
 		blank.add(cell);
-		cell.addObserver(this);		
+		cell.addObserver(this);
 	}
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		Cell cell = (Cell)o;
-		if (cell.getValue() != 0) {
-			blank.remove(cell);
-			filled.add(cell);
-			for (Cell c : blank) {
-				c.removePossible(cell.getValue());			
+		if (arg.equals(Cell.VALUE_SET)) {
+			Cell cell = (Cell)o;		
+			if (cell.getValue() != 0) {
+				blank.remove(cell);
+				filled.add(cell);
+				for (Cell c : new ArrayList<>(blank)) {
+					c.removePossible(cell.getValue());			
+				}
+			}		
+		} else if (arg instanceof Area && !arg.equals(this)) {
+			Area area = (Area)arg;
+			Set<Cell> intersection = new HashSet<>(blank);
+			intersection.retainAll(area.cells);
+			if (intersection.size() < blank.size()) {
+				Cell c = intersection.iterator().next();
+				if (c.getMustBe().size() == intersection.size()) {
+					for (Cell b : new ArrayList<>(blank)) {
+						if (!intersection.contains(b)) {
+							b.removePossible(c.getMustBe().toArray(new Integer[0]));
+						}
+					}
+				}
 			}
 		}		
 	}
@@ -42,6 +61,23 @@ public class Area implements Observer {
 			blank.add(c);			
 		}
 		filled.clear();
+	}
+	
+	public void setMustBeValues() {
+		Set<Integer> shouldBe = new HashSet<>(9);
+		List<Cell> blanks = new ArrayList<>(blank);
+		for (int i = 1; i <= 9; i++) {
+			shouldBe.add(i);
+		}
+		for (Cell f : filled) {
+			shouldBe.remove(f.getValue());
+		}
+		for (Cell c : blanks) {
+			c.setMustBe(shouldBe);
+		}
+		for (Cell c : blanks) {
+			c.notifyObservers(this);
+		}
 	}
 	
 }

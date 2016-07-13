@@ -1,12 +1,16 @@
 package massahud.hackerrank.projecteuler.massahud.hackerrank.projecteuler.euler096;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
 public class Cell extends Observable {
-	private static final String VALUE_SET = "VALUE_SET";
+
+	public static final String VALUE_SET = "VALUE_SET";
 	private final Set<Integer> possible = new HashSet<>(9);
+	private final Set<Integer> mustBe = new HashSet<>(9);
 	private int value;
 	
 	public Cell() {
@@ -28,20 +32,49 @@ public class Cell extends Observable {
 		return value;
 	}
 
-	public void removePossible(int val) {
-		if (possible.remove(val)) {
-			if (possible.size() == 1) {
-				this.value = possible.iterator().next();
-				notifyObservers(VALUE_SET);
+	public void removePossible(Integer ... values) {
+		for (int val : values) {
+			if (possible.remove(val)) {
+				setChanged();
+				if (possible.size() == 1) {
+					this.value = possible.iterator().next();
+					notifyObservers(VALUE_SET);
+				}
 			}
 		}
-		
+	}
+	
+	public void setMustBe(Collection<Integer> values) {
+		if (possible.retainAll(values)) {
+			setChanged();
+		}
+		mustBe.clear();
+		mustBe.addAll(values);
+		if (possible.size() == 1) {
+			setValue(possible.iterator().next());		
+		}
 	}
 
 	public void reset() {
-		this.value = 0;
+		value = 0;
+		mustBe.clear();
 		for (int i = 1; i <= 9; i++) {
 			possible.add(i);
 		}
 	}
+
+	public Set<Integer> getMustBe() {
+		return mustBe;
+	}
+
+	public Set<Integer> getPossible() {
+		return possible;
+	}
+
+	@Override
+	public String toString() {
+		return "Cell [possible=" + possible + ", mustBe=" + mustBe + ", value=" + value + "]\n";
+	}
+	
+	
 }

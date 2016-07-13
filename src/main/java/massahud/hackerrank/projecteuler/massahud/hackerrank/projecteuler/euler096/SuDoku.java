@@ -1,6 +1,9 @@
 package massahud.hackerrank.projecteuler.massahud.hackerrank.projecteuler.euler096;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 
 public class SuDoku {
@@ -48,9 +51,38 @@ public class SuDoku {
 		for (int i = 0; i < 9; i++) {
 			String line = state[i];
 			for (int j = 0; j < 9; j++) {
+				if (i == 8 && (j==3 || j==5)) {
+					cells[i][j].addObserver(new Observer() {
+
+						@Override
+						public void update(Observable o, Object arg) {
+							System.out.println(o);
+							System.out.println(arg);
+						}
+						
+					});
+				}
 				cells[i][j].setValue(line.charAt(j) - '0');
 			}
-		}		
+		}
+		System.out.println(toString(cells));
+		boolean notSolved = true;
+		while(notSolved) {
+			for (Area area : areas) {
+				area.setMustBeValues();
+			}
+			System.out.println(toString(cells));
+			notSolved = false;
+			for (int i = 0; i < 9 && !notSolved; i++) {
+				for (int j = 0; j < 9 && !notSolved; j++) {
+					if (cells[i][j].getValue() == 0) {
+						notSolved=true;
+						break;
+					}
+				}
+			}
+		}
+	
 		String[] solution = new String[9];
 		for (int i = 0; i < 9; i++) {
 			StringBuilder line = new StringBuilder();
@@ -84,5 +116,16 @@ public class SuDoku {
 		for (String line : sudoku.solve(board)) {
 			System.out.println(line);
 		}
+	}
+	
+	public String toString(Cell[][] cells) {
+		StringBuilder val = new StringBuilder();
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				val.append(cells[i][j].getValue()).append(" ");
+			}
+			val.append("\n");
+		}
+		return val.toString();
 	}
 }
