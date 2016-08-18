@@ -5,7 +5,7 @@
 	<artifactId>massahud-hackerrank</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>HackerRank Challenges</name>
-	<description>Me trying to solve Hacker Rank challenges</description>
+	<description>Trying to solve Hacker Rank challenges</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
