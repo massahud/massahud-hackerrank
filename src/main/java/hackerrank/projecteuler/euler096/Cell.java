@@ -1,4 +1,4 @@
-package massahud.hackerrank.projecteuler.euler096;
+package hackerrank.projecteuler.euler096;
 
 import java.util.Collection;
 import java.util.HashSet;

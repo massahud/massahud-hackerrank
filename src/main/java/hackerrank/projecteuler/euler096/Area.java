@@ -1,5 +1,5 @@
 
-package massahud.hackerrank.projecteuler.euler096;
+package hackerrank.projecteuler.euler096;
 
 import java.util.ArrayList;
 import java.util.Arrays;
